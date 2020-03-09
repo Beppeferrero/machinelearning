@@ -1,0 +1,116 @@
+# importo le librerie necessarie 
+
+# machine learning
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+
+# grafica
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+
+
+nome_file=input("inserisci il nome del file excel (senza estensione) ")
+
+#dati = pd.read_csv('C:/users/mazza/Desktop/cartella_csv/'+nome_file+'.csv')
+dati = pd.read_excel('C:/users/mazza/Desktop/cartella_csv/'+nome_file+'.xls')
+
+X = dati[['zona','mq','stanze','annoc','annor','mq_g','certifica','riscaldamento']]
+
+y = dati['prezzo']
+
+X
+
+y
+
+regressore = LinearRegression()
+regressore.fit(X, y)
+
+# intercetta: b0
+
+print('intercetta', regressore.intercept_)
+
+coefficienti = pd.DataFrame(regressore.coef_, X.columns, columns = ['coefficienti'])
+
+# coefficienti: b1, b2,.....
+
+print(coefficienti)
+
+y_calcolati = regressore.predict(X)
+
+# R^2
+
+print('R2', metrics.r2_score(y, y_calcolati))
+
+for r in range(0,8):
+    if r==0:
+        c1=coefficienti.iloc[r,0]
+    elif r==1:
+        c2=coefficienti.iloc[r,0]
+    elif r==2:
+        c3=coefficienti.iloc[r,0]
+    elif r==3:
+        c4=coefficienti.iloc[r,0]
+    elif r==4:
+        c5=coefficienti.iloc[r,0]        
+    elif r==5:
+        c6=coefficienti.iloc[r,0]   
+    elif r==6:
+        c7=coefficienti.iloc[r,0]    
+    elif r==7:
+        c8=coefficienti.iloc[r,0]            
+print("c1= ",c1)
+print("c2= ",c2)
+print("c3= ",c3)
+print("c4= ",c4)
+print("c5= ",c5)
+print("c6= ",c6)
+print("c7= ",c7)
+print("c8= ",c8)
+
+print("D A T I   I M M O B I L E")
+continua = True
+while continua:
+    domanda=input('vuoi inserire i dati? ')
+    if domanda.upper()=='SI':
+        print("")
+        zona=         int(input("             zona  "))
+        mq=           int(input("      metri quadri "))
+        stanze=       int(input("            stanze "))
+        annoc =       int(input("  anno di costruz. "))               
+        annor =       int(input(" anno di ristrutt. "))   
+        mq_g =        int(input("         mq garage "))   
+        certifica=    int(input("    certificazione ")) 
+        riscaldamento=int(input("      riscaldamento")) 
+      
+        print("")
+        prezzo=regressore.intercept_+c1*zona+c2*mq+c3*stanze+c4*annoc+c5*annor+c6*mq_g+c7*certifica+c8*riscaldamento
+        print("prezzo predetto",prezzo)
+    else:
+        break
+
+# X['mq'] = vettore colonna 'mq' della matrice X
+
+# Y = vettore colonna
+
+# vedo come sono distribuiti zona, mq,... ossia le colonne di X
+
+# ad esempio, i mq considerati vanno da 80 a 150
+
+sns.boxplot(data=X)
+plt.show()
+
+#  altro metodo di regressione lineare
+
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.25)
+regressore=LinearRegression()
+regressore.fit(X_train, y_train)
+y_pred=regressore.predict(X_test)
+plt.scatter(y_pred,y_test)
+plt.plot(y_pred,y_pred,color="red")
+plt.show()
+
+
+
